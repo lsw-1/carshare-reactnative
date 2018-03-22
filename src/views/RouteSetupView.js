@@ -16,9 +16,7 @@ export default class RouteSetup extends Component {
   };
   render() {
     const { navigation: { state } } = this.props;
-    const fromCoordinates = state.params && state.params.from.latlng;
-    const toCoordinates = state.params && state.params.to.latlng;
-    console.log(state);
+    console.log(state.params.route[0]);
     return (
       <LinearGradient
         colors={["rgba(1,155,100,1)", "rgba(153,222,155,1)"]}
@@ -28,23 +26,18 @@ export default class RouteSetup extends Component {
           alignItems: "center"
         }}
       >
-        <Text style={styles.title}>{JSON.stringify(fromCoordinates)}</Text>
+        <Text style={styles.title}>Description</Text>
         <TextInput
           underlineColorAndroid={"rgba(0,0,0,0)"}
           style={styles.txtfld}
           multiline
           numberOfLines={5}
         />
-        {/* <Text style={styles.title}> Description </Text>
-        <TextInput style={styles.txtfld} multiline numberOfLines={5} /> */}
         <Mutation
           mutation={CREATE_ROUTE_MUTATION}
           variables={{
             desc: this.state.descriptionInp,
-            toLogitude: toCoordinates.longitude,
-            toLatitude: toCoordinates.latitude,
-            fromLogitude: fromCoordinates.longitude,
-            fromLatitude: fromCoordinates.latitude
+            ...state.params.route[0]
           }}
         >
           {createRoute => (
@@ -68,16 +61,16 @@ export default class RouteSetup extends Component {
 const CREATE_ROUTE_MUTATION = gql`
   mutation createRoute(
     $desc: String!
-    $toLogitude: Float
-    $toLatitude: Float
-    $fromLogitude: Float
-    $fromLatitude: Float
+    $toLongitude: Float!
+    $toLatitude: Float!
+    $fromLongitude: Float!
+    $fromLatitude: Float!
   ) {
     createRoute(
       description: $desc
-      toLogitude: $toLogitude
+      toLongitude: $toLongitude
       toLatitude: $toLatitude
-      fromLogitude: $fromLogitude
+      fromLongitude: $fromLongitude
       fromLatitude: $fromLatitude
     ) {
       id

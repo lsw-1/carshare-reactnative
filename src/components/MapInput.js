@@ -76,16 +76,16 @@ const styles = StyleSheet.create({
   input: {
     paddingLeft: 30,
     marginTop: 15,
-    backgroundColor: "#ddd",
+    backgroundColor: "#aaa",
     height: 45,
-    borderColor: "#aaa",
-    borderWidth: 2,
+    // borderColor: "#aaa",
+    // borderWidth: 2,
     borderRadius: 10,
     width: "80%"
   },
   inputContainer: {
     flex: 0.4,
-    backgroundColor: "#fff",
+    backgroundColor: "#2f3948",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -5 },
@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.5,
     shadowOffset: { width: 4, height: 4 },
-    backgroundColor: "#eeaabb"
+    backgroundColor: "#D89E6B"
   }
 });

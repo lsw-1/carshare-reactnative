@@ -2,7 +2,7 @@ import { StackNavigator } from "react-navigation";
 import MapView from "./views/MapView";
 import RouteSetupView from "./views/RouteSetupView";
 import HomeView from "./views/HomeView";
-import MapWithRoutes from "./views/MapWithRoutes";
+import FindRoutes from "./views/FindRoutes";
 
 const routes = StackNavigator(
   {
@@ -13,7 +13,7 @@ const routes = StackNavigator(
       screen: MapView
     },
     MapWithRoutes: {
-      screen: MapWithRoutes
+      screen: FindRoutes
     },
     RouteSetup: {
       screen: RouteSetupView

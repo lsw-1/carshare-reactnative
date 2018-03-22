@@ -9,6 +9,10 @@ import {
 import { LinearGradient } from "expo";
 import { NavigationActions } from "react-navigation";
 export default class HomeView extends Component {
+  static navigationOptions = {
+    headerTransparent: true
+  };
+
   render() {
     return (
       <LinearGradient

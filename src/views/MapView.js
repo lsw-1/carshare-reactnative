@@ -12,7 +12,17 @@ import { MapView, Location, Permissions } from "expo";
 import { Marker, Polyline } from "react-native-maps";
 import { NavigationActions } from "react-navigation";
 import MapInput from "../components/MapInput";
+import MapWithRoutes from "../components/MapWithRoutes";
+import { getLocationAsync } from "../utils";
 class Map extends Component {
+  static navigationOptions = {
+    title: "Create Route",
+    headerTintColor: "#fff",
+    headerStyle: {
+      backgroundColor: "#2f3948"
+    },
+    headerTransparent: true
+  };
   state = {
     region: {
       latitude: 59.1681872,
@@ -20,25 +30,16 @@ class Map extends Component {
       longitude: 18.1377503,
       longitudeDelta: 0.3000000000000256
     },
-    toMarker: null,
-    fromMarker: null
+    SearchedRoute: []
   };
 
   componentWillMount() {
-    // this.getLocationAsync();
+    this.handleGetLocationAsync();
   }
 
-  getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      this.setState({
-        errorMessage: "Permission to access location was denied"
-      });
-      console.log("ERROR");
-    }
-
-    const region = await Location.getCurrentPositionAsync({});
-    this.setState({ region: { ...this.state.region, ...region.coords } });
+  handleGetLocationAsync = async () => {
+    const res = await getLocationAsync();
+    this.setState({ region: { ...this.state.region, ...res } });
   };
 
   setMarkerLocation = async (from, to) => {
@@ -52,20 +53,14 @@ class Map extends Component {
           latitude: fromCrd[0].latitude,
           longitude: fromCrd[0].longitude
         },
-        fromMarker: {
-          title: "From",
-          latlng: {
-            latitude: fromCrd[0].latitude,
-            longitude: fromCrd[0].longitude
+        SearchedRoute: [
+          {
+            fromLatitude: fromCrd[0].latitude,
+            fromLongitude: fromCrd[0].longitude,
+            toLatitude: toCrd[0].latitude,
+            toLongitude: toCrd[0].longitude
           }
-        },
-        toMarker: {
-          title: "To",
-          latlng: {
-            latitude: toCrd[0].latitude,
-            longitude: toCrd[0].longitude
-          }
-        }
+        ]
       });
     } catch (error) {
       console.log(error);
@@ -74,46 +69,21 @@ class Map extends Component {
 
   navigateToSetup = () =>
     this.props.navigation.navigate("RouteSetup", {
-      from: this.state.fromMarker,
-      to: this.state.toMarker
+      route: this.state.SearchedRoute
     });
 
-  onRegionChange(region) {
+  onRegionChange = region => {
     console.log(region);
-  }
+  };
   render() {
     return (
       <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
-        >
-          {this.state.toMarker && (
-            <Marker
-              draggable
-              coordinate={this.state.toMarker.latlng}
-              title={this.state.toMarker.title}
-            />
-          )}
-          {this.state.fromMarker && (
-            <View>
-              <Polyline
-                strokeColor="#ffaaaa"
-                strokeWidth={2}
-                coordinates={[
-                  this.state.fromMarker.latlng,
-                  this.state.toMarker.latlng
-                ]}
-              />
-              <Marker
-                draggable
-                coordinate={this.state.fromMarker.latlng}
-                title={this.state.fromMarker.title}
-              />
-            </View>
-          )}
-        </MapView>
+        <MapWithRoutes
+          // onRegionChange={this.onRegionChange}
+          routes={this.state.SearchedRoute}
+          locationOfMap={this.state.region}
+        />
+
         <MapInput
           handleConfirm={this.navigateToSetup}
           handleSetRoute={this.setMarkerLocation}
@@ -127,32 +97,5 @@ export default Map;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  map: { flex: 1 },
-  input: {
-    paddingLeft: 30,
-    marginTop: 15,
-    backgroundColor: "#ddd",
-    height: 45,
-    borderColor: "#aaa",
-    borderWidth: 2,
-    borderRadius: 10,
-    width: "80%"
-  },
-  inputContainer: {
-    flex: 0.4,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -5 },
-    shadowOpacity: 0.2
-  },
-  btn: {
-    margin: 10,
-    borderRadius: 5,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 4, height: 4 },
-    backgroundColor: "#eeaabb"
-  }
+  map: { flex: 1 }
 });
