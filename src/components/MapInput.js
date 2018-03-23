@@ -13,7 +13,7 @@ import {
 class MapInput extends Component {
   state = {
     fromInp: "",
-    ToInp: "",
+    toInp: "",
     showConf: false,
     fromSuggestion: {
       street: "",
@@ -27,7 +27,8 @@ class MapInput extends Component {
 
   handleSetRoute = () => {
     const { handleSetRoute } = this.props;
-    handleSetRoute(this.state.fromInp, this.state.ToInp);
+
+    handleSetRoute(this.state.fromInp, this.state.toInp);
     this.setState({ showConf: true });
   };
 
@@ -36,16 +37,16 @@ class MapInput extends Component {
     const crd = await Location.reverseGeocodeAsync({
       ...res[0]
     });
-    this.setState({ fromSuggestion: { ...crd[0] } });
-  }, 2000);
+    this.setState({ fromSuggestion: { ...crd[0] }, fromInp: txt });
+  }, 1000);
 
   toInpChange = debounce(async txt => {
     const res = await Location.geocodeAsync(txt);
     const crd = await Location.reverseGeocodeAsync({
       ...res[0]
     });
-    this.setState({ toSuggestion: crd[0] });
-  }, 2000);
+    this.setState({ toSuggestion: crd[0], toInp: txt });
+  }, 1000);
 
   render() {
     const { handleConfirm } = this.props;

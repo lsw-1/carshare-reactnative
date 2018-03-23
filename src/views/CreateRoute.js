@@ -46,7 +46,6 @@ class Map extends Component {
     try {
       const fromCrd = await Location.geocodeAsync(from);
       const toCrd = await Location.geocodeAsync(to);
-
       this.setState({
         region: {
           ...this.state.region,
