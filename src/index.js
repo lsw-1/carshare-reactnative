@@ -1,7 +1,7 @@
 import { StackNavigator } from "react-navigation";
-import MapView from "./views/MapView";
-import RouteSetupView from "./views/RouteSetupView";
-import HomeView from "./views/HomeView";
+import MapView from "./views/CreateRoute";
+import RouteSetupView from "./views/RouteSetup";
+import HomeView from "./views/Home";
 import FindRoutes from "./views/FindRoutes";
 
 const routes = StackNavigator(

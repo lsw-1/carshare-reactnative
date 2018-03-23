@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { MapView, Location, Permissions } from "expo";
+import debounce from "lodash.debounce";
 import {
   View,
   Text,
@@ -12,7 +14,15 @@ class MapInput extends Component {
   state = {
     fromInp: "",
     ToInp: "",
-    showConf: false
+    showConf: false,
+    fromSuggestion: {
+      street: "",
+      name: ""
+    },
+    toSuggestion: {
+      street: "",
+      name: ""
+    }
   };
 
   handleSetRoute = () => {
@@ -21,8 +31,25 @@ class MapInput extends Component {
     this.setState({ showConf: true });
   };
 
+  fromInpChange = debounce(async txt => {
+    const res = await Location.geocodeAsync(txt);
+    const crd = await Location.reverseGeocodeAsync({
+      ...res[0]
+    });
+    this.setState({ fromSuggestion: { ...crd[0] } });
+  }, 2000);
+
+  toInpChange = debounce(async txt => {
+    const res = await Location.geocodeAsync(txt);
+    const crd = await Location.reverseGeocodeAsync({
+      ...res[0]
+    });
+    this.setState({ toSuggestion: crd[0] });
+  }, 2000);
+
   render() {
     const { handleConfirm } = this.props;
+    const { toSuggestion, fromSuggestion } = this.state;
     return (
       <KeyboardAvoidingView
         behavior="padding"
@@ -30,17 +57,23 @@ class MapInput extends Component {
         style={styles.inputContainer}
       >
         <TextInput
-          onChangeText={txt => this.setState({ fromInp: txt })}
+          onChangeText={this.fromInpChange}
           placeholder="From"
           style={styles.input}
           underlineColorAndroid={"rgba(0,0,0,0)"}
         />
+        <Text style={{ color: "#fff", marginTop: 2 }}>
+          {fromSuggestion.street} {fromSuggestion.city}
+        </Text>
         <TextInput
-          onChangeText={txt => this.setState({ ToInp: txt })}
+          onChangeText={this.toInpChange}
           placeholder="To"
           style={styles.input}
           underlineColorAndroid={"rgba(0,0,0,0)"}
         />
+        <Text style={{ color: "#fff", marginTop: 2 }}>
+          {toSuggestion.street} {toSuggestion.city}
+        </Text>
         {this.state.showConf ? (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity

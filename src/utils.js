@@ -10,6 +10,6 @@ export const getLocationAsync = async () => {
   }
 
   const region = await Location.getCurrentPositionAsync({});
-  console.log("ERROR" + region);
+
   return region.coords;
 };

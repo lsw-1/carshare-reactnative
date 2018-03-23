@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { MapView, Location, Permissions } from "expo";
 import { Marker, Polyline } from "react-native-maps";
-import { NavigationActions } from "react-navigation";
+
 import MapInput from "../components/MapInput";
 import MapWithRoutes from "../components/MapWithRoutes";
 import { getLocationAsync } from "../utils";
